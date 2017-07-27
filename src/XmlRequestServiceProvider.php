@@ -24,10 +24,36 @@ class XmlRequestServiceProvider extends ServiceProvider
                 return [];
             }
             // Returns the xml input from a request
-            $xml = simplexml_load_string($this->getContent(), null, LIBXML_NOCDATA);
-            $json = json_encode($xml);
-
-            return json_decode($json, $assoc);
+            return XmlRequestServiceProvider::parse($this->getContent()); 
         });
+    }
+
+    public static function parse($xml)
+    {
+        return self::normalize(simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA | LIBXML_NOBLANKS));
+    }
+
+    protected static function normalize($obj)
+    {
+        $result = null;
+
+        if (is_object($obj)) {
+            $obj = (array) $obj;
+        }
+
+        if (is_array($obj)) {
+            foreach ($obj as $key => $value) {
+                $res = self::normalize($value);
+                if (($key === '@attributes') && ($key)) {
+                    $result = $res;
+                } else {
+                    $result[$key] = $res;
+                }
+            }
+        } else {
+            $result = $obj;
+        }
+
+        return $result;
     }
 }
