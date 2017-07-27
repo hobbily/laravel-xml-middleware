@@ -24,7 +24,8 @@ class XmlRequestServiceProvider extends ServiceProvider
                 return [];
             }
             // Returns the xml input from a request
-            return XmlRequestServiceProvider::parse($this->getContent()); 
+            $xml = preg_replace('~\s*(<([^-->]*)>[^<]*<!--\2-->|<[^>]*>)\s*~', '$1', $this->getContent());
+            return XmlRequestServiceProvider::parse($xml); 
         });
     }
 
