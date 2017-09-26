@@ -1,5 +1,5 @@
 {
-  "name": "gradii/laravel-xml-middleware",
+  "name": "hobbily/laravel-xml-middleware",
   "description": "A Laravel Middleware to accept XML requests",
   "keywords": [
     "Laravel",
